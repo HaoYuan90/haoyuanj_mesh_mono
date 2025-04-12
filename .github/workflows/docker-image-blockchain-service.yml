@@ -1,0 +1,21 @@
+name: Docker Image For Blockchain Service
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: |
+        docker build blockchain-service \
+          --file blockchain-service/Dockerfile \
+          --tag blockchain-service:$(date +%Y%m%d.%s)
