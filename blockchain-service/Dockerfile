@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk:24-latest
+FROM azul/zulu-openjdk-alpine:24-jre-headless-latest
 
 ARG JAR_FILE=target/blockchain-service*.jar
 COPY ${JAR_FILE} blockchain-service.jar
