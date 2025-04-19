@@ -41,16 +41,14 @@ jobs:
 
     - name: Push Git tag
       run: |
-        git tag "${{ env.SERVICE_NAME }}-$VERSION"
-        git push origin "${{ env.SERVICE_NAME }}-$VERSION"
+        git tag "${{ env.SERVICE_NAME }}-${{ env.VERSION }}"
+        git push origin "${{ env.SERVICE_NAME }}-${{ env.VERSION }}"
 
     - name: Extract metadata for Docker image labelling
       id: meta
       uses: docker/metadata-action@v5
       with:
         images: ${{ vars.DOCKERHUB_USERNAME }}/mesh-mono-${{ env.SERVICE_NAME }}
-        tags: |
-          type=ref,event=tag
 
     - name: Login to Docker Hub
       uses: docker/login-action@v3
@@ -65,7 +63,7 @@ jobs:
         context: ./${{ env.SERVICE_NAME }}
         file: ./${{ env.SERVICE_NAME }}/Dockerfile
         push: true
-        tags: ${{ steps.meta.outputs.tags }}
+        tags: ${{ env.VERSION }}
         labels: ${{ steps.meta.outputs.labels }}
 
     - name: Generate artifact attestation
