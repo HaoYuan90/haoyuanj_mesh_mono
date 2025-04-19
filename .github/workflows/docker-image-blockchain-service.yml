@@ -17,6 +17,7 @@ jobs:
 
     permissions:
       actions: write  # for Git tag creation
+      content: write  # for Git tag creation
       id-token: write  # for actions/attest-build-provenance
       attestations: write  # for actions/attest-build-provenance
 
