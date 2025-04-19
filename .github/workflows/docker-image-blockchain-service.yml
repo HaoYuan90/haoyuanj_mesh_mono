@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
+      actions: write  # for Git tag creation
       id-token: write  # for actions/attest-build-provenance
       attestations: write  # for actions/attest-build-provenance
 
@@ -39,8 +40,8 @@ jobs:
 
     - name: Push Git tag
       run: |
-        git tag $VERSION
-        git push origin $VERSION
+        git tag "${{ env.SERVICE_NAME }}-$VERSION"
+        git push origin "${{ env.SERVICE_NAME }}-$VERSION"
 
     - name: Extract metadata for Docker image labelling
       id: meta
