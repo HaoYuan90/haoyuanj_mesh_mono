@@ -63,7 +63,7 @@ jobs:
         context: ./${{ env.SERVICE_NAME }}
         file: ./${{ env.SERVICE_NAME }}/Dockerfile
         push: true
-        tags: ${{ env.VERSION }}
+        tags: ${{ vars.DOCKERHUB_USERNAME }}/mesh-mono-${{ env.SERVICE_NAME }}:${{ env.VERSION }}
         labels: ${{ steps.meta.outputs.labels }}
 
     - name: Generate artifact attestation
