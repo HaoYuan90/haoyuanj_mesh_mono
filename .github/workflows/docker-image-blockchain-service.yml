@@ -3,8 +3,8 @@ name: Docker Image For Blockchain Service
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    paths:
+      - 'blockchain-service/**'
 
 env:
   SERVICE_NAME: blockchain-service
