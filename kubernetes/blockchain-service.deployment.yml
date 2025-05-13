@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blockchain-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: blockchain-service
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: blockchain-service
+    spec:
+      containers:
+        - name: blockchain-service
+          image: xiaopewpew/mesh-mono-blockchain-service:20250419.1745082941
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
