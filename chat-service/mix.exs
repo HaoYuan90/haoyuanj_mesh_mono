@@ -22,7 +22,10 @@ defmodule ChatService.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:plug_cowboy, "~> 2.0"}
+      {:cowboy, "~> 2.4"},
+      {:jason, "~> 1.1"},
+      {:plug_cowboy, "~> 2.0"},
+      {:plug, "~> 1.7"}
     ]
   end
 end
