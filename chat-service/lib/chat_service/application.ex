@@ -1,15 +1,25 @@
 defmodule ChatService.Application do
   use Application
+  require Logger
+
+  @default_port 4000
 
   @impl true
   def start(_type, _args) do
+    port =
+      if System.get_env("PORT"),
+        do: String.to_integer(System.get_env("PORT")),
+        else: @default_port
+
+    Logger.info("Starting application listen on port #{port}...")
+
     children = [
       Plug.Cowboy.child_spec(
         scheme: :http,
         plug: ChatService.Router,
         options: [
           dispatch: dispatch(),
-          port: 4000
+          port: port
         ]
       ),
       Registry.child_spec(
