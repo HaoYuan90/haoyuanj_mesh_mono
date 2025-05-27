@@ -1,16 +1,21 @@
 # Makefile to help build and dockerize services for local development ONLY
 
-.PHONY: package
-package:
+.PHONY: package-blockchain
+package-blockchain:
 	mvn package -f ./blockchain-service/pom.xml
 
-.PHONY: docker
-docker:
+.PHONY: docker-blockchain
+docker-blockchain:
 	docker build -t blockchain-service-local ./blockchain-service
 
-.PHONY: all
-all: package docker
+.PHONY: clean-blockchain
+clean-blockchain:
+	rm -rf ./*/target
 
-.PHONY: clean
-clean:
+.PHONY: docker-chat
+docker-chat:
+	docker build -t chat-service-local ./chat-service
+
+.PHONY: clean-blockchain
+clean-blockchain:
 	rm -rf ./*/target
