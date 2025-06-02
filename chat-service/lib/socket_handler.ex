@@ -1,4 +1,5 @@
 defmodule ChatService.SocketHandler do
+  require Logger
   @behaviour :cowboy_websocket
 
   def init(request, _state) do
@@ -24,19 +25,27 @@ defmodule ChatService.SocketHandler do
           any()
         ) :: {:reply, {:text, any()}, any()}
   def websocket_handle({:text, json}, state) do
-    payload = Jason.decode!(json)
-    message = payload["data"]["message"]
+    Logger.info("Received message: #{json}")
 
-    Registry.ChatService
-    |> Registry.dispatch(state.registry_key, fn(entries) ->
-      for {pid, _} <- entries do
-        if pid != self() do
-          Process.send(pid, message, [])
+    try do
+      payload = Jason.decode!(json)
+      message = payload["data"]["message"]
+
+      Registry.ChatService
+      |> Registry.dispatch(state.registry_key, fn(entries) ->
+        for {pid, _} <- entries do
+          if pid != self() do
+            Process.send(pid, message, [])
+          end
         end
-      end
-    end)
+      end)
 
-    {:reply, {:text, message}, state}
+      {:reply, {:text, message}, state}
+    rescue
+      _e in Jason.DecodeError ->
+        Logger.error("Failed to decode message")
+        {:reply, {:text, "Invalid payload"}, state}
+    end
   end
 
   def websocket_info(info, state) do
