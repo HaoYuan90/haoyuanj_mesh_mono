@@ -1,5 +1,12 @@
+FROM maven:3.9.9-eclipse-temurin-24 AS build
+
+COPY . .
+RUN mvn package
+
 FROM azul/zulu-openjdk-alpine:24-jre-headless-latest
 
-ARG JAR_FILE=target/blockchain-service*.jar
-COPY ${JAR_FILE} blockchain-service.jar
+# TODO: configure service port
+# EXPOSE 4011
+
+COPY --from=build target/blockchain-service*.jar blockchain-service.jar
 ENTRYPOINT ["java","-jar","/blockchain-service.jar"]

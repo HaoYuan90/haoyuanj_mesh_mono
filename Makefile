@@ -16,6 +16,6 @@ clean-blockchain:
 docker-chat:
 	docker build -t chat-service-local ./chat-service
 
-.PHONY: clean-blockchain
-clean-blockchain:
+.PHONY: clean-chat
+clean-chat:
 	rm -rf ./*/target
