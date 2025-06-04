@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: blockchain-service
-          image: xiaopewpew/mesh-mono-blockchain-service:20250419.1745082941
+          #image: docker.io/library/blockchain-service-local:latest
+          image: xiaopewpew/mesh-mono-blockchain-service:20250602.1748846841
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
