@@ -5,3 +5,16 @@ Run the following command to build target
 ```bash
   make all
 ```
+## Features
+
+### Log stack (optional)
+
+Implemented with fluentd and Elastic. Simply do not run Elastic
+to disable (fluentd daemon will die failing to connect to Elastic).
+
+Steps to set up:
+1. Start Elastic locally ([guide](https://www.elastic.co/docs/solutions/search/run-elasticsearch-locally))
+2. Create secrets for Elastic credentials:
+   ```bash
+   kubectl create secret generic elastic --from-literal=user={user} --from-literal=password={password}
+   ```

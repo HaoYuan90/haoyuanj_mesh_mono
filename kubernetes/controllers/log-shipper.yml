@@ -1,22 +1,49 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: fluentd
+  name: fluentd-es
   namespace: kube-system
   labels:
     k8s-app: fluentd-logging
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: fluentd
+      app.kubernetes.io/name: fluentd-es
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: fluentd
+        app.kubernetes.io/name: fluentd-es
     spec:
       containers:
-        - name: fluentd
-          image: fluent/fluentd-kubernetes-daemonset:v1.16-debian-syslog-2
+        - name: fluentd-es
+          image: fluent/fluentd-kubernetes-daemonset:v1-debian-elasticsearch
+          env:
+            - name: K8S_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name:  FLUENT_ELASTICSEARCH_HOST
+              value: "host.minikube.internal"  # For Minikube to connect to Elastic in host machine
+            - name:  FLUENT_ELASTICSEARCH_PORT
+              value: "9200"
+            - name: FLUENT_ELASTICSEARCH_SCHEME
+              value: "http"
+            - name: FLUENT_ELASTICSEARCH_SSL_VERIFY
+              value: "true"
+            - name: FLUENT_ELASTICSEARCH_SSL_VERSION
+              value: "TLSv1_2"
+            - name: FLUENT_ELASTICSEARCH_USER
+              valueFrom:
+                secretKeyRef:
+                  name: elastic
+                  key: user
+            - name: FLUENT_ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: elastic
+                  key: password
+            - name: FLUENTD_SYSTEMD_CONF
+              value: 'disable'
           # TODO: is root necessary?
           securityContext: # Run as root (for Minikube)
             allowPrivilegeEscalation: true
