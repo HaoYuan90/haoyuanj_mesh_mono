@@ -1,7 +1,7 @@
 FROM elixir:otp-26-alpine
 
-EXPOSE 4011
-ENV PORT=4011
+EXPOSE 8080
+ENV PORT=8080
 
 ENV MIX_ENV=prod
 

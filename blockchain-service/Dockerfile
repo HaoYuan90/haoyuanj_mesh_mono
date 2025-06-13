@@ -5,8 +5,7 @@ RUN mvn package
 
 FROM azul/zulu-openjdk-alpine:24-jre-headless-latest
 
-# TODO: configure service port
-# EXPOSE 4011
+EXPOSE 8080
 
 COPY --from=build target/blockchain-service*.jar blockchain-service.jar
 ENTRYPOINT ["java","-jar","/blockchain-service.jar"]
