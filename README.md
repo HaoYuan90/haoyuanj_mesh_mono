@@ -7,6 +7,10 @@ Run the following command to build target
 ```
 ## Features
 
+### Nginx ingress controller
+
+For convenience's sake, update /etc/hosts so domain names defined in nginx resolve to `127.0.0.1`.
+
 ### Log stack (optional)
 
 Implemented with fluentd and Elastic. Simply do not run Elastic

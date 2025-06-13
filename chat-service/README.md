@@ -18,3 +18,9 @@ Get port number using with "docker ps" if service is created with "docker run".
   websocat -v ws://localhost:{port}/ws/chat
 ```
 
+To test against serivce on Minikube, do
+
+```bash
+  websocat -v ws://haoyuanj-mesh.homelab/ws/chat
+```
+

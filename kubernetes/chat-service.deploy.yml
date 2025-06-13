@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: chat-service
-          image: xiaopewpew/mesh-mono-chat-service:20250610.1749533258
+          image: xiaopewpew/mesh-mono-chat-service:20250613.1749796854
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
