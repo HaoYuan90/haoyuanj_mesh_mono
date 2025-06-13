@@ -5,6 +5,7 @@ on:
     branches: [ "main" ]
     paths:
       - 'blockchain-service/**'
+  workflow_dispatch:
 
 env:
   SERVICE_NAME: blockchain-service

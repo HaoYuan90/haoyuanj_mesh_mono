@@ -5,6 +5,7 @@ on:
     branches: [ "main" ]
     paths:
       - 'chat-service/**'
+  workflow_dispatch:
 
 env:
   SERVICE_NAME: chat-service
