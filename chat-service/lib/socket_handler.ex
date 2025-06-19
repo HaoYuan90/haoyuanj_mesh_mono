@@ -2,6 +2,7 @@ defmodule ChatService.SocketHandler do
   require Logger
   @behaviour :cowboy_websocket
 
+  @spec message_id(map()) :: String.t() | nil
   def message_id(msg_payload) do
     cond do
       !Map.has_key?(msg_payload, "data") ->
@@ -16,6 +17,17 @@ defmodule ChatService.SocketHandler do
       true ->
         msg_payload["data"]["message"]["message_id"]
     end
+  end
+
+  def ack_message(message_id) do
+    %{
+      "data" => %{
+        "ack" => %{
+          "message_id" => message_id,
+          "timestamp_mili" => DateTime.to_unix(DateTime.utc_now(), :millisecond)
+        }
+      }
+    }
   end
 
   def init(request, _state) do
@@ -46,6 +58,7 @@ defmodule ChatService.SocketHandler do
     try do
       payload = Jason.decode!(json_payload)
       message_id = message_id(payload)
+      ack_message = Jason.encode!(ack_message(message_id))
 
       Registry.ChatService
       |> Registry.dispatch(state.registry_key, fn entries ->
@@ -56,7 +69,7 @@ defmodule ChatService.SocketHandler do
         end
       end)
 
-      {:reply, {:text, message_id}, state}
+      {:reply, {:text, ack_message}, state}
     rescue
       _e in Jason.DecodeError ->
         Logger.error("Failed to decode message")
