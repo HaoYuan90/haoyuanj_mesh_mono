@@ -1,5 +1,6 @@
 package com.haoyuanj.mesh.chat;
 
+import java.util.Scanner;
 import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,12 +27,19 @@ public class Main {
     return new TextMessage(m.writeValueAsBytes(msg));
   }
 
-  public static void main(String[] args)
-      throws InterruptedException, IOException, JsonProcessingException {
+  private static String collectChannelName(Scanner sc) {
+    System.out.println("Please input chat channel name:");
+    return sc.nextLine().toLowerCase().trim();
+  }
+
+  public static void main(String[] args) throws IOException {
+    Scanner sc = new Scanner(System.in);
+    String channelName = collectChannelName(sc);
+
     WebSocketClient chatClient = new StandardWebSocketClient();
     WebSocketHandler socketHandler = new ChatMsgWebSocketHandler();
     CompletableFuture<WebSocketSession> sessionFute =
-        chatClient.execute(socketHandler, "ws://localhost:55003/ws/temp");
+        chatClient.execute(socketHandler, "ws://localhost:4000/ws/" + channelName);
     WebSocketSession chatSession = null;
     try {
       chatSession = sessionFute.get();
@@ -42,7 +50,12 @@ public class Main {
       return;
     }
 
-    chatSession.sendMessage(getChatMessage("haha"));
-    Thread.sleep(5000);
+    while(true) {
+      System.out.print("You: ");
+      String msg = sc.nextLine().trim();
+      chatSession.sendMessage(getChatMessage(msg));
+    }
+
+    // Program can only be closed by ctrl-c
   }
 }
