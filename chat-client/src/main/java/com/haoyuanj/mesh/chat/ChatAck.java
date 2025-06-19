@@ -4,6 +4,6 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-@JsonTypeName("message")
+@JsonTypeName("ack")
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record ChatMessage(String messageId, String content, long timestampMili) {}
+public record ChatAck(String messageId, long timestampMili) {}

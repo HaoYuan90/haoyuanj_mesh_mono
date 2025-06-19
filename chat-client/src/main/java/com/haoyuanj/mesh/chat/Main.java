@@ -1,27 +1,37 @@
 package com.haoyuanj.mesh.chat;
 
-import org.springframework.messaging.converter.MappingJackson2MessageConverter;
-import org.springframework.messaging.converter.MessageConverter;
-import org.springframework.messaging.simp.stomp.StompHeaders;
-import org.springframework.messaging.simp.stomp.StompSession;
+import java.util.UUID;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.client.WebSocketClient;
-import org.springframework.web.socket.client.WebSocketConnectionManager;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
-import org.springframework.web.socket.handler.TextWebSocketHandler;
-import org.springframework.web.socket.messaging.WebSocketStompClient;
+import java.time.Instant;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
 public class Main {
-  public static void main(String[] args) throws InterruptedException, IOException {
+
+  private static final ObjectMapper m = new ObjectMapper();
+
+  private static TextMessage getChatMessage(String msgStr) throws JsonProcessingException {
+    ChatData msg =
+        new ChatData(
+            new ChatMessage(UUID.randomUUID().toString(), msgStr, Instant.now().toEpochMilli()),
+            null);
+    return new TextMessage(m.writeValueAsBytes(msg));
+  }
+
+  public static void main(String[] args)
+      throws InterruptedException, IOException, JsonProcessingException {
     WebSocketClient chatClient = new StandardWebSocketClient();
-    WebSocketHandler socketHandler = new TextWebSocketHandler();
+    WebSocketHandler socketHandler = new ChatMsgWebSocketHandler();
     CompletableFuture<WebSocketSession> sessionFute =
-        chatClient.execute(socketHandler, "ws://localhost:55004/ws/temp");
+        chatClient.execute(socketHandler, "ws://localhost:55003/ws/temp");
     WebSocketSession chatSession = null;
     try {
       chatSession = sessionFute.get();
@@ -32,8 +42,7 @@ public class Main {
       return;
     }
 
-    MessageConverter mc = new MappingJackson2MessageConverter();
-
-    chatSession.sendMessage(new TextMessage(("haha").getBytes()));
+    chatSession.sendMessage(getChatMessage("haha"));
+    Thread.sleep(5000);
   }
 }
